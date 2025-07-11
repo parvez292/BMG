@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Bangladesh Multiplayer Group (BMG)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-bg: #121212;
+            --secondary-bg: #1e1e1e;
+            --card-bg: #2a2a2a;
+            --primary-text: #5372f0; /* নীল রঙ */
+            --secondary-text: #e0e0e0;
+            --accent-color: #5372f0;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --border-color: #5372f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--secondary-text);
+            line-height: 1.7;
+        }
+        
+        .container {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        /* হেডার */
+        .header {
+            background-color: var(--secondary-bg);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .header-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .header-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* স্ক্রিন ম্যানেজমেন্ট */
+        .screen { display: none; }
+        .screen.active { 
+            display: block; 
+            animation: fadeIn 0.4s ease-in-out; 
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary-text);
+            margin-bottom: 25px;
+        }
+
+        /* ক্যাটাগরি গ্রিড ডিজাইন */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .category-item {
+            background: var(--card-bg);
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px;
+            border: 1px solid #444;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 120px;
+        }
+        .category-item:hover {
+            transform: translateY(-5px);
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        .category-item .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .category-item h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--secondary-text);
+        }
+        .category-item:hover h3 {
+            color: white;
+        }
+        
+        /* কন্টেন্ট পেইজ */
+        .content-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        .back-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            font-size: 1.8em;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .back-button:hover {
+            background-color: #3b5bdb;
+        }
+
+        /* সংশোধিত রুলস লিস্ট স্টাইল */
+        .rules-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .rules-item {
+            background: var(--card-bg);
+            color: var(--secondary-text);
+            border-radius: 15px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            font-weight: 500;
+            font-size: 1.05em;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left: 5px solid var(--accent-color);
+            box-shadow: 0 4px 10px var(--shadow-color);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .rules-item-icon {
+            font-size: 1.5em;
+            color: var(--primary-text);
+        }
+        .rules-item span {
+            flex-grow: 1;
+        }
+        .rules-item strong {
+            color: var(--primary-text);
+            font-weight: bold;
+        }
+
+        /* কন্টাক্ট, এডমিন এবং প্লেয়ার কার্ড */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .info-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid var(--accent-color);
+            text-decoration: none;
+            color: var(--secondary-text);
+            transition: all 0.3s ease;
+        }
+        .info-card:hover {
+            transform: scale(1.03);
+            border-left-color: #e94560;
+        }
+        
+        .contact-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .contact-card img {
+            width: 35px;
+            height: 35px;
+        }
+
+        .admin-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .admin-details {
+            flex-grow: 1;
+        }
+        .admin-details p {
+            margin-bottom: 8px;
+        }
+        .admin-details strong {
+            color: var(--accent-color);
+        }
+        .admin-details .links a {
+            color: var(--primary-text);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .admin-photo img {
+            width: 90px;
+            height: 90px;
+            border-radius: 15px;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .player-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .player-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .player-card .player-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* 'ট্রিপ টাইম' পেজের জন্য CSS */
+        .trip-time-container {
+            background-color: #1e1e1e;
+            background-image: linear-gradient(rgba(30, 30, 30, 0.8), rgba(30, 30, 30, 0.8)), url('https://i.ibb.co/6r1SPY7/bg-tiger.jpg');
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            padding-top: 0;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .trip-header-banner {
+            background-color: #ff9800;
+            color: #1a237e;
+            padding: 10px;
+            font-size: 1.5em;
+            font-weight: 700;
+            text-shadow: 0 0 5px #81d4fa;
+            font-family: 'Arial Black', sans-serif;
+            letter-spacing: 1px;
+        }
+        .trip-content-body { padding: 30px 20px; }
+        .trip-title {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(to bottom, #ff8a65, #ff4081);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin-bottom: 30px;
+        }
+        .time-buttons-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .trip-time-button {
+            background-color: #00bcd4;
+            color: #111;
+            border: 3px solid #ffffff;
+            border-radius: 15px;
+            padding: 15px;
+            font-size: 1.8em;
+            font-weight: 700;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.4), inset 0 3px 5px rgba(255,255,255,0.3);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            cursor: default;
+        }
+        .trip-footer {
+            background-color: #ffc107;
+            color: #333;
+            padding: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        /* নোটিশ বোর্ড স্টাইল */
+        .notice-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--accent-color);
+            box-shadow: 0 4px 10px var(--shadow-color);
+            word-wrap: break-word;
+        }
+        .notice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap; 
+            gap: 10px;
+        }
+        .notice-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--primary-text);
+        }
+        .notice-date {
+            font-size: 0.9em;
+            color: #a0a0a0;
+            font-style: italic;
+        }
+        .notice-body {
+            color: var(--secondary-text);
+            white-space: pre-wrap; 
+        }
+
+        /* ডাউনলোড বাটন স্টাইল */
+        .download-button {
+            display: block; 
+            width: 100%;    
+            margin-top: 15px; 
+            padding: 12px 20px; 
+            background: linear-gradient(to right, #4CAF50, #45a049); 
+            color: white;
+            text-align: center;
+            text-decoration: none; 
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px; 
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .download-button:hover {
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            background: linear-gradient(to right, #45a049, #4CAF50);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="https://i.ibb.co/VckDF8fj/bmg.png" alt="BMG Logo" class="header-logo">
+        <h1 class="header-title">Bangladesh Multiplayer Group</h1>
+    </header>
+
+    <main id="app-container">
+        <!-- হোম স্ক্রিন (ক্যাটাগরি) -->
+        <div id="home-screen" class="screen active">
+            <div class="container">
+                <div class="category-grid">
+                    <!-- প্রথম সারি -->
+                    <div class="category-item" onclick="showScreen('group-rules-screen')"><span class="icon">📜</span><h3>গ্রুপ রুলস</h3></div>
+                    <div class="category-item" onclick="showScreen('game-rules-screen')"><span class="icon">🎮</span><h3>খেলার রুলস</h3></div>
+                    
+                    <!-- দ্বিতীয় সারি -->
+                    <div class="category-item" onclick="showScreen('trip-time-screen')"><span class="icon">⏰</span><h3>ট্রিপ টাইম</h3></div>
+                    <div class="category-item" onclick="showScreen('notice-board-screen')"><span class="icon">📢</span><h3>নোটিশ বোর্ড</h3></div>
+
+                    <!-- তৃতীয় সারি -->
+                    <div class="category-item" onclick="showScreen('active-players-screen')"><span class="icon">🏆</span><h3>এক্টিভ প্লেয়ার</h3></div>
+                    <div class="category-item" onclick="showScreen('admin-list-screen')"><span class="icon">🛡️</span><h3>এডমিন প্যানেল</h3></div>
+
+                    <!-- চতুর্থ সারি -->
+                    <a href="https://forms.gle/TkusCJfEfHXG4xjM6" target="_blank" class="category-item" style="text-decoration: none;"><span class="icon">📝</span><h3>আবেদন করুন</h3></a>
+                    <div class="category-item" onclick="showScreen('developer-contact-screen')"><span class="icon">🧑‍💻</span><h3>ডেভেলপার</h3></div>
+                    
+                    <!-- পঞ্চম সারি -->
+                    <a href="https://facebook.com/groups/538798182623719/" target="_blank" class="category-item" style="text-decoration: none;"><span class="icon">👥</span><h3>ফেসবুক গ্রুপ</h3></a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- গ্রুপ রুলস স্ক্রিন -->
+        <div id="group-rules-screen" class="screen">
+            <div class="container">
+                <div class="content-header">
+                    <button class="back-button" onclick="showScreen('home-screen')">←</button>
+                    <h2 class="section-title">গ্রুপের নিয়মাবলী</h2>
+                </div>
+                <ul class="rules-list">
+                    <li class="rules-item"><span class="rules-item-icon">🚫</span><span>অশ্লীল, উস্কানিমূলক, হিংস্র, বিদ্বেষী আচরণ থেকে বিরত থাকুন</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">❗</span><span>গেমে কেউ চাপ দিলে বা <strong>*Hack*</strong> ব্যবহার করলে যথাযথ প্রমাণ সহকারে এডমিনের কাছে অভিযোগ করুন</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">🤫</span><span>মেম্বারদের জন্য <strong>*@everyone*</strong> মেনশন নিষেধ</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">⏱️</span><span>রুম খোলার ৫ মিনিটের মধ্যেই রুমে প্রবেশ করবেন</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">👋</span><span>একটানা ৭ দিন ট্রিপ না দিলে আপনাকে রিমুভ করা হবে</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">🔒</span><span>গ্রুপের বাইরে রুম আইডি পাসওয়ার্ড শেয়ার নিষেধ</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">⏳</span><span>আনঅফিসিয়াল খেলতে পারবেন, তবে সেটা <strong>*Official*</strong> ট্রিপের কমপক্ষে ১ ঘন্টা আগে শেষ করতে হবে</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">🔗</span><span>গেম ব্যতীত অন্য কিছুর ছবি, ভিডিও বা লিংক এবং অন্য গ্রুপের পোস্ট শেয়ার সম্পূর্ণ নিষেধ</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">🚌</span><span>স্পেশাল ট্রিপে নির্ধারিত <strong>*Bus Skin*</strong> নিয়ে রুমে প্রবেশ করবেন</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">🎨</span><span>গ্রুপের Pic/Theme/Name- এগুলো পরিবর্তন করা নিষেধ</span></li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- খেলার রুলস স্ক্রিন -->
+        <div id="game-rules-screen" class="screen">
+            <div class="container">
+                <div class="content-header">
+                    <button class="back-button" onclick="showScreen('home-screen')">←</button>
+                    <h2 class="section-title">খেলার নিয়মাবলী</h2>
+                </div>
+                <ul class="rules-list">
+                    <li class="rules-item"><span class="rules-item-icon">💬</span><span>রুমে অযথা প্রয়োজন ছাড়া মেসেজ করবেন না</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">✔️</span><span>মাস্টার "Ready" বলার পরপরই রেডি দেবেন</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">🅿️</span><span>মাস্টার পার্ক (Park) করতে বললে, পাশাপাশি করে গাড়িগুলো সমানভাবে রাখবেন</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">🚦</span><span>মাস্টার "Go" না বলার আগে কেউ গাড়ি ছাড়বেন না</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">🗺️</span><span>"Next Map Line" বলা হলে লোডিং এর পরবর্তী ম্যাপে গিয়ে বাম পাশে লাইন করবেন</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">↔️</span><span>অযথা লেন পরিবর্তন করবেন না, করলে <strong>*Indicator*</strong> ব্যবহার করবেন</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">⚔️</span><span>সকল প্রকার চাপাচাপি, গালা-গালি, হ্যাক/স্পিড ফাইল ব্যবহার সম্পূর্ণ নিষিদ্ধ</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">💡</span><span>ভিডিও চলাকালীন সময়ে অবশ্যই <strong>*Depper*</strong> (ডিপার) দিবেন এবং অন্য গাড়িকে <strong>*Overtake*</strong> বা প্রেশার দেওয়া থেকে বিরত থাকুন</span></li>
+                    <li class="rules-item"><span class="rules-item-icon">🏆</span><span>টার্মিনালে পৌঁছানোর অবশ্যই <strong>*Highest Speed*</strong> এর স্ক্রিনশট নেবেন</span></li>
+                </ul>
+                <div style="text-align:center; margin-top: 30px; font-size: 1.2em; color: var(--primary-text);">
+                    <p><strong>নির্দেশনায়:</strong><br><strong>*BMG এডমিন প্যানেল*</strong></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ডেভেলপার কন্টাক্ট স্ক্রিন -->
+        <div id="developer-contact-screen" class="screen">
+            <div class="container">
+                <div class="content-header">
+                    <button class="back-button" onclick="showScreen('home-screen')">←</button>
+                    <h2 class="section-title">ডেভেলপারের সাথে যোগাযোগ</h2>
+                </div>
+                <div class="info-grid">
+                    <a href="https://www.facebook.com/parvez.akand.2025" target="_blank" class="info-card contact-card">
+                        <img src="https://www.svgrepo.com/show/382728/messenger-facebook.svg" alt="Messenger Logo"><h4>Messenger</h4>
+                    </a>
+                    <a href="https://wa.me/8801600039783" target="_blank" class="info-card contact-card">
+                        <img src="https://www.svgrepo.com/show/452133/whatsapp.svg" alt="WhatsApp Logo"><h4>WhatsApp</h4>
+                    </a>
+                    <a href="https://t.me/annonymous707" target="_blank" class="info-card contact-card">
+                        <img src="https://www.svgrepo.com/show/452115/telegram.svg" alt="Telegram Logo"><h4>Telegram</h4>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- এডমিন লিস্ট স্ক্রিন -->
+        <div id="admin-list-screen" class="screen">
+            <div class="container">
+                <div class="content-header">
+                    <button class="back-button" onclick="showScreen('home-screen')">←</button>
+                    <h2 class="section-title">এডমিন/মাস্টার পরিচিতি</h2>
+                </div>
+                <div class="info-grid">
+                    <div class="info-card admin-card">
+                        <div class="admin-details">
+                            <p><strong>নাম:</strong> MD Anarul Islam</p>
+                            <p><strong>ঠিকানা:</strong> শৈলকুপা,ঝিনাইদহ </p>
+                            <p><strong>পদ:</strong> হেড এডমিন</p>
+                            <p><strong>মোবাইল:</strong> ০১৯৬৫০৫৩২৮৫</p>
+                            <p class="links"><strong>লিংক সমূহ:</strong> <a href="https://www.facebook.com/md.anarul.islam.ah" target="_blank">ফেসবুক</a></p>
+                        </div>
+                        <div class="admin-photo">
+                            <img src="https://i.ibb.co/sJm0bMpd/anarul.jpg" alt="Admin Photo">
+                        </div>
+                    </div>
+                    <div class="info-card admin-card">
+                        <div class="admin-details">
+                            <p><strong>নাম:</strong> HM Shakib Hasan Sohan</p>
+                            <p><strong>ঠিকানা:</strong> বেলকুচি,সিরাজগঞ্জ</p>
+                            <p><strong>পদ:</strong> সেকেন্ডারি এডমিন</p>
+                            <p><strong>মোবাইল:</strong> ০১৭৫৯০৫৫০৪৫</p>
+                            <p class="links"><strong>লিংক সমূহ:</strong> <a href="https://www.facebook.com/share/19FNqxgyiG/" target="_blank">ফেসবুক</a></p>
+                        </div>
+                        <div class="admin-photo">
+                            <img src="https://i.ibb.co/nh7s4rM/sakib.jpg" alt="Admin Photo">
+                        </div>
+                    </div>
+                    <div class="info-card admin-card">
+                        <div class="admin-details">
+                            <p><strong>নাম:</strong> Parvez Akanda</p>
+                            <p><strong>ঠিকানা:</strong> ভূঞাপুর, টাঙ্গাইল</p>
+                            <p><strong>পদ:</strong> ট্রিপ/ভিডিও মাস্টার</p>
+                            <p><strong>মোবাইল:</strong> ০১৬০০০৩৯৭৮৩</p>
+                            <p class="links"><strong>লিংক সমূহ:</strong> <a href="https://www.facebook.com/parvez.akanda.2025" target="_blank">ফেসবুক</a></p>
+                        </div>
+                        <div class="admin-photo">
+                            <img src="https://i.ibb.co/vxphFhLc/IMG-20250704-221028-832.jpg" alt="Admin Photo">
+                        </div>
+                    </div>
+                    <div class="info-card admin-card">
+                        <div class="admin-details">
+                            <p><strong>নাম:</strong> MD Atikur Rahaman (Monna)</p>
+                            <p><strong>ঠিকানা:</strong> লামা, বান্দরবান</p>
+                            <p><strong>পদ:</strong> ট্রিপ মাস্টার</p>
+                            <p><strong>মোবাইল:</strong>০১৮২৭৪০৪২৬৫</p>
+                            <p class="links"><strong>লিংক সমূহ:</strong> <a href="https://www.facebook.com/share/1DyvFrZ3V9/" target="_blank">ফেসবুক</a></p>
+                        </div>
+                        <div class="admin-photo">
+                            <img src="https://i.ibb.co/ns1w5X3f/Messenger-creation-6-E76-CE8-F-166-B-4318-B3-C9-FB5-EFE816152.jpg" alt="Admin Photo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- এক্টিভ প্লেয়ার লিস্ট স্ক্রিন -->
+        <div id="active-players-screen" class="screen">
+            <div class="container">
+                <div class="content-header">
+                    <button class="back-button" onclick="showScreen('home-screen')">←</button>
+                    <h2 class="section-title">এক্টিভ প্লেয়ার তালিকা</h2>
+                </div>
+                <div class="info-grid">
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>Parvez Akanda</h4>
+                        </div>
+                        <a href="https://facebook.com/parvez.akanda.2025" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>HM Sakib Hasan Sohan</h4>
+                        </div>
+                        <a href="https://facebook.com/example" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+                
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>Md Atikur Rahaman (Monna)</h4>
+                        </div>
+                        <a href="https://facebook.com/parvez.akanda.2025" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>Lakshman Pal</h4>
+                        </div>
+                        <a href="https://facebook.com/example" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>Md mamun</h4>
+                        </div>
+                        <a href="https://facebook.com/parvez.akanda.2025" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>Hafej Md Najim Uddin</h4>
+                        </div>
+                        <a href="https://facebook.com/example" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+    
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>S majarul</h4>
+                        </div>
+                        <a href="https://facebook.com/parvez.akanda.2025" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>Mahmud Hasan</h4>
+                        </div>
+                        <a href="https://facebook.com/example" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div> 
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>Sk Asif</h4>
+                        </div>
+                        <a href="https://facebook.com/parvez.akanda.2025" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+                   <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>গরীবের জীবন</h4>
+                        </div>
+                        <a href="https://facebook.com/parvez.akanda.2025" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4> অভিমানী রাজকুমার</h4>
+                        </div>
+                        <a href="https://facebook.com/example" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+                
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>Mahmudul Hasan</h4>
+                        </div>
+                        <a href="https://facebook.com/parvez.akanda.2025" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>আসক্ত মায়া</h4>
+                        </div>
+                        <a href="https://facebook.com/example" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>Rakibul islam Ovi</h4>
+                        </div>
+                        <a href="https://facebook.com/parvez.akanda.2025" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>Fazle Rabby Tauhid</h4>
+                        </div>
+                        <a href="https://facebook.com/example" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+    
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>Loading..</h4>
+                        </div>
+                        <a href="https://facebook.com/parvez.akanda.2025" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div>
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>Loading...</h4>
+                        </div>
+                        <a href="https://facebook.com/example" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div> 
+                    <div class="info-card player-card">
+                        <div class="player-info">
+                            <img src="" alt="Player Photo">
+                            <h4>Loading....</h4>
+                        </div>
+                        <a href="https://facebook.com/parvez.akanda.2025" target="_blank" class="player-link">ফেসবুক আইডি</a>
+                    </div> 
+                </div>
+            </div>
+        </div>
+
+        <!-- 'ট্রিপ টাইম' স্ক্রিন -->
+        <div id="trip-time-screen" class="screen">
+            <div class="container">
+                <div class="content-header">
+                    <button class="back-button" onclick="showScreen('home-screen')">←</button>
+                </div>
+                <div class="trip-time-container">
+                    <div class="trip-header-banner">BANGLADESH MULTIPLAYER GROUP V3.7.1</div>
+                    <div class="trip-content-body">
+                        <h2 class="trip-title">ট্রিপের সময়</h2>
+                        <div class="time-buttons-wrapper">
+                            <div class="trip-time-button">বিকাল ৩:০০ টা</div>
+                            <div class="trip-time-button">রাত ৮:০০ টা</div>
+                            <div class="trip-time-button">রাত ১০:০০ টা</div>
+                        </div>
+                    </div>
+                    <div class="trip-footer">Published by: BMG Authority</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- নোটিশ বোর্ড স্ক্রিন -->
+        <div id="notice-board-screen" class="screen">
+            <div class="container">
+                <div class="content-header">
+                    <button class="back-button" onclick="showScreen('home-screen')">←</button>
+                    <h2 class="section-title">গ্রুপ নোটিশ বোর্ড</h2>
+                </div>
+                <p id="last-updated-info" style="text-align: center; margin-bottom: 20px; color: var(--primary-text); font-weight: bold;"></p>
+                <div id="notice-list-container">
+                    <!-- নোটিশগুলো এখানে জাভাস্ক্রিপ্ট থেকে স্বয়ংক্রিয়ভাবে যোগ হবে -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- এই ফাংশনটি একটি স্ক্রিন থেকে অন্য স্ক্রিনে যেতে সাহায্য করে ---
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            const activeScreen = document.getElementById(screenId);
+            if (activeScreen) {
+                activeScreen.classList.add('active');
+                window.scrollTo(0, 0); // নতুন স্ক্রিন দেখানোর সময় পেজের উপরে স্ক্রল করার জন্য
+            }
+        }
+
+        // --- এখানে আপনার সকল নোটিশ ডাটা হিসেবে থাকবে ---
+        // নতুন নোটিশ যোগ করতে চাইলে, এই তালিকার শুরুতে যোগ করুন
+        const notices = [
+            {
+                title: "পবিত্র জুম্মাহ্ উপলক্ষে স্পেশাল ট্রিপ ও স্কিন",
+                date: "জুলাই ১১, ২০২৫ - রাত ১০:০০ টা",
+                content: `আসসালামু আলাইকুম।
+পবিত্র জুম্মাহ্ উপলক্ষে আমাদের গ্রুপের পক্ষ থেকে একটি ট্রিপের আয়োজন করা হয়েছে। সকলকে নির্ধারিত স্কিন ও সময়ে উপস্থিত থাকার জন্য অনুরোধ করা হলো।
+
+স্পেশাল স্কিনটি নিচের বাটন থেকে ডাউনলোড করে নিন।
+
+ধন্যবাদ,
+এডমিন প্যানেল।`,
+                // এই নোটিশে ডাউনলোড লিঙ্ক যোগ করা হলো
+                downloadLink: "https://drive.google.com/drive/folders/12HNB8qYNb-zXT4qcSlFBWcrE3N6w_RKl"
+            },
+            {
+                title: "গ্রুপের নতুন নিয়মাবলী",
+                date: "জুলাই ১১, ২০২৫",
+                content: `সকল সদস্যের অবগতির জন্য জানানো যাচ্ছে যে, গ্রুপের নিয়মাবলীতে কিছু নতুন ধারা যুক্ত করা হয়েছে। অনুগ্রহ করে সবাই একবার "গ্রুপ রুলস" সেকশনটি দেখে নিবেন। নিয়ম ভঙ্গ করলে কঠোর ব্যবস্থা নেওয়া হবে।`
+            },
+            {
+                title: "BMG গ্রুপে স্বাগতম!",
+                date: "জুলাই ১১, ২০২৫",
+                content: `Bangladesh Multiplayer Group (BMG)-তে সকল নতুন সদস্যকে স্বাগতম। আশা করি, আপনারা সবাই গ্রুপের নিয়মকানুন মেনে চলবেন এবং একটি সুন্দর গেমিং কমিউনিটি গড়ে তুলতে সাহায্য করবেন।`
+            }
+        ];
+
+
+        // --- এই ফাংশনটি নোটিশগুলো ওয়েবপেজে দেখাবে (ডাউনলোড বাটনসহ) ---
+        function loadNotices() {
+            const container = document.getElementById('notice-list-container');
+            const lastUpdatedInfo = document.getElementById('last-updated-info');
+            container.innerHTML = ''; // আগের কন্টেন্ট মুছে ফেলা হলো
+
+            if (notices.length > 0) {
+                lastUpdatedInfo.textContent = `সর্বশেষ আপডেট: ${notices[0].date}`;
+
+                notices.forEach(notice => {
+                    const noticeElement = document.createElement('div');
+                    noticeElement.className = 'notice-item';
+                    
+                    let noticeHTML = `
+                        <div class="notice-header">
+                            <h4 class="notice-title">${notice.title}</h4>
+                            <span class="notice-date">${notice.date}</span>
+                        </div>
+                        <p class="notice-body">${notice.content}</p>
+                    `;
+
+                    if (notice.downloadLink) {
+                        noticeHTML += `
+                            <a href="${notice.downloadLink}" target="_blank" class="download-button">
+                                ডাউনলোড করুন
+                            </a>
+                        `;
+                    }
+
+                    noticeElement.innerHTML = noticeHTML;
+                    container.appendChild(noticeElement);
+                });
+            } else {
+                lastUpdatedInfo.textContent = 'এখনো কোনো নোটিশ যোগ করা হয়নি।';
+            }
+        }
+
+        // পেজ লোড হওয়ার সাথে সাথে নোটিশগুলো দেখানোর জন্য এই লাইনটি যোগ করা হলো
+        document.addEventListener('DOMContentLoaded', loadNotices);
+
+    </script>
+</body>
+</html>
